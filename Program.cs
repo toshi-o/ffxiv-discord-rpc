@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using Sharlayan;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models;
+using String = System.String;
 
 namespace FFXIV_discord_rpc
 {
@@ -26,12 +27,47 @@ namespace FFXIV_discord_rpc
         public static DiscordRpc.RichPresence Presence;
         public static DiscordRpc.EventHandlers handlers;
 
+        private static void Log(string message)
+        {
+            File.AppendAllText("log.txt", $"{DateTime.Now:hh:mm:ss tt} | {message}\r\n");
+        }
+
         private static void Exit(string message = "")
         {
             DiscordRpc.Shutdown();
             MemoryHandler.Instance.UnsetProcess();
             if(message != "") MessageBox.Show(message);
             Application.Exit();
+        }
+
+        private static void UpdatePresence()
+        {
+            var onlinestatus = Player.Status.ToString();
+            if (string.IsNullOrEmpty(onlinestatus))
+            {
+                Exit("Online status is nothing? (report this on github)");
+            }
+
+            Presence.details = Player.Name;
+
+            if (TrayContext.FfxivIconItem.Checked)
+            {
+                Presence.largeImageKey = "ffxiv";
+                Presence.largeImageText = string.Empty;
+                Presence.smallImageKey = string.Empty;
+                Presence.smallImageText = string.Empty;
+            }
+            else
+            {
+                Presence.largeImageKey = onlinestatus.ToLower();
+                Presence.largeImageText = Player.Location == "Mordion Gaol" ? "https://support.na.square-enix.com/" : Player.Location;
+                Presence.smallImageKey = Player.Job.ToString().ToLower();
+                Presence.smallImageText = $"{Player.Job.ToString()} Lv{Player.Level}";
+            }
+
+            Presence.startTimestamp = (Player.Status == Actor.Icon.InDuty || Player.Status == Actor.Icon.PvP) ? ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds() : 0;
+
+            DiscordRpc.UpdatePresence(ref Presence);
         }
 
         public static void FFXIVCheckThread()
@@ -120,30 +156,7 @@ namespace FFXIV_discord_rpc
 
                                 if (Player._changed)
                                 {
-                                    var onlinestatus = Player.Status.ToString();
-                                    if (string.IsNullOrEmpty(onlinestatus))
-                                    {
-                                        Exit("Online status is nothing? (report this on github)");
-                                        break;
-                                    }
-
-                                    Presence.details = Player.Name;
-
-                                    if (TrayContext.FfxivIconItem.Checked)
-                                    {
-                                        Presence.largeImageKey = onlinestatus.ToLower();
-                                        Presence.largeImageText = Player.Location == "Mordion Gaol" ? "https://support.na.square-enix.com/" : Player.Location;
-                                        Presence.smallImageKey = Player.Job.ToString().ToLower();
-                                        Presence.smallImageText = $"{Player.Job.ToString()} Lv{Player.Level}";
-                                    }
-                                    else
-                                    {
-                                        Presence.largeImageKey = "ffxiv";
-                                    }
-
-                                    Presence.startTimestamp = (Player.Status == Actor.Icon.InDuty || Player.Status == Actor.Icon.PvP) ? ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds() : 0;
-
-                                    DiscordRpc.UpdatePresence(ref Presence);
+                                    UpdatePresence();
                                 }
 
                                 Player._changed = false;
@@ -196,6 +209,13 @@ namespace FFXIV_discord_rpc
                         AutostartKey.SetValue("ffxiv-discord-rpc", Assembly.GetExecutingAssembly().Location);
                     else if(AutostartKey.GetValue("ffxiv-discord-rpc") != null)
                         AutostartKey.DeleteValue("ffxiv-discord-rpc");
+                };
+                FfxivIconItem.Click += (sender, args) =>
+                {
+                    //TODO saving and loading from file
+                    FfxivIconItem.Checked = !FfxivIconItem.Checked;
+                    DiscordRpc.ClearPresence();
+                    UpdatePresence();
                 };
                 _trayIcon = new NotifyIcon
                 {
