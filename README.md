@@ -30,9 +30,10 @@ How to build:
 
 3. Build
 
-4. Download the latest discord-rpc from [here](https://github.com/discordapp/discord-rpc/releases/latest)
+4. Download the latest discord-rpc from [here](https://ci.appveyor.com/project/crmarsh/discord-rpc/build/artifacts) (builds\install
+\win64-dynamic.zip)
 
-5. Copy the ```discord-rpc.dll``` from the ```win64-dynamic/bin/discord-rpc``` folder and put it in the build output
+5. Copy the ```discord-rpc.dll``` from the ```bin/discord-rpc``` folder and put it in the build output
 
 TODO:
 
