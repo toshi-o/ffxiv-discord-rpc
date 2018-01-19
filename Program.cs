@@ -94,7 +94,7 @@ namespace FFXIV_discord_rpc
                         var gamedir = Path.GetDirectoryName(process.MainModule.FileName);
                         if (string.IsNullOrEmpty(gamedir))
                         {
-                            Msg($"Unable to use GetDirectoryName on {process.MainModule.FileName}");
+                            Msg($"Unable to use GetDirectoryName on {process.MainModule.FileName} (report this on github)");
                             return;
                         }
 
@@ -127,7 +127,7 @@ namespace FFXIV_discord_rpc
 
             if (!MemoryHandler.Instance.IsAttached)
             {
-                Msg("where is FINAL FANTASY XIV !?", waitforinput: true);
+                Msg("FINAL FANTASY XIV isn't running.", waitforinput: true);
                 return;
             }
 
@@ -166,21 +166,21 @@ namespace FFXIV_discord_rpc
 
                 if (!characterFound)
                 {
-                    Msg("Your character is gone?", waitforinput: true);
+                    Msg("Your character is gone? (report this on github)", waitforinput: true);
                     break;
                 }
 
                 if (_changed)
                 {
-                    var onlinestatus2 = Status.ToString();
-                    if (string.IsNullOrEmpty(onlinestatus2))
+                    var onlinestatus = Status.ToString();
+                    if (string.IsNullOrEmpty(onlinestatus))
                     {
-                        Msg("Something's wrong? onlinestatus2 is nothing.", waitforinput: true);
+                        Msg("Online status is nothing? (report this on github)", waitforinput: true);
                         break;
                     }
 
                     presence.details = character;
-                    presence.largeImageKey = Status.ToString().ToLower();
+                    presence.largeImageKey = onlinestatus.ToLower();
                     presence.largeImageText = Location;
                     presence.smallImageKey = Job.ToString().ToLower();
                     presence.smallImageText = $"{Job.ToString()} Lv{Level}";
@@ -192,6 +192,9 @@ namespace FFXIV_discord_rpc
 
                 Thread.Sleep(1000);
             }
+
+            DiscordRpc.Shutdown();
+            MemoryHandler.Instance.UnsetProcess();
         }
     }
 }
