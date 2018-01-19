@@ -1,4 +1,4 @@
-Status/class icons are ripped from the game files.
+Status icons are ripped from the game files.
 
 I don't know if that's bad or anything but if it is then let me know. 
 
