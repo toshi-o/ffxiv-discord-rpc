@@ -41,104 +41,57 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiscordRpc.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="sharlayan\Sharlayan\AttachmentWorker.cs" />
     <Compile Include="sharlayan\Sharlayan\Constants.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\ActionEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\ActorEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\Coordinate.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\EnmityEntry.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\Enums\Actor.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Enums\HotBarRecast.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Enums\Inventory.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\HotBarRecastItem.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IActionEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IActorEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\Interfaces\ICoordinate.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IEnmityEntry.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IHotBarRecastItem.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IInventoryEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IItemDesc.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IItemInfo.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IPartyEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IPlayerEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\IStatusEntry.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\Interfaces\ITargetEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\InventoryEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\ItemDesc.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\ItemInfo.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\PartyEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Core\PlayerEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\StatusEntry.cs" />
-    <Compile Include="sharlayan\Sharlayan\Core\TargetEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Delegates\MonsterWorkerDelegate.cs" />
     <Compile Include="sharlayan\Sharlayan\Delegates\NPCWorkerDelegate.cs" />
-    <Compile Include="sharlayan\Sharlayan\Delegates\PartyInfoWorkerDelegate.cs" />
     <Compile Include="sharlayan\Sharlayan\Delegates\PCWorkerDelegate.cs" />
-    <Compile Include="sharlayan\Sharlayan\Helpers\ActionHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\ActorEntityHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\APIHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\BitConverter.cs" />
-    <Compile Include="sharlayan\Sharlayan\Helpers\PartyEntityHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\PlayerEntityHelper.cs" />
-    <Compile Include="sharlayan\Sharlayan\Helpers\StatusEffectHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\StringHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\XmlHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\Helpers\ZoneHelper.cs" />
     <Compile Include="sharlayan\Sharlayan\MemoryHandler.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\ActionItem.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\ActionReadResult.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\ActorReadResult.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\InventoryReadResult.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\Localization.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\MapItem.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\PartyInfoReadResult.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\PlayerInfoReadResult.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\ProcessModel.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\Signature.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\StatusItem.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\Structures.ActorEntity.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\Structures.ActorInfo.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.ChatLogPointers.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\Structures.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.EnmityEntry.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.HotBarEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.InventoryEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.ItemInfo.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.PartyEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.PartyInfo.cs" />
     <Compile Include="sharlayan\Sharlayan\Models\Structures.PlayerEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.RecastEntity.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.StatusEntry.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\Structures.TargetInfo.cs" />
-    <Compile Include="sharlayan\Sharlayan\Models\TargetReadResult.cs" />
-    <Compile Include="sharlayan\Sharlayan\Reader.Actions.cs" />
     <Compile Include="sharlayan\Sharlayan\Reader.Actor.cs" />
     <Compile Include="sharlayan\Sharlayan\Reader.cs" />
-    <Compile Include="sharlayan\Sharlayan\Reader.Inventory.cs" />
-    <Compile Include="sharlayan\Sharlayan\Reader.PartyInfo.cs" />
     <Compile Include="sharlayan\Sharlayan\Reader.PlayerInfo.cs" />
-    <Compile Include="sharlayan\Sharlayan\Reader.Target.cs" />
     <Compile Include="sharlayan\Sharlayan\Scanner.cs" />
     <Compile Include="sharlayan\Sharlayan\Signatures.cs" />
     <Compile Include="sharlayan\Sharlayan\UnsafeNativeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="sharlayan\Sharlayan\packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="sharlayan\Sharlayan\.gitignore" />
     <Content Include="sharlayan\Sharlayan\Logo.png" />
     <Content Include="sharlayan\Sharlayan\Sharlayan.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="sharlayan\Sharlayan\packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
