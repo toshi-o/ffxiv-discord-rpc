@@ -16,60 +16,53 @@ public static class Program
     private const string APPID = "401183593273098252";
     //the signatures have been working for a really long time but this is just to be safe
     private const string VERSION = "2017.12.06.0000.0000";
-    private static bool changed;
+    private static bool _changed;
     private static int _level = 0;
     public static int Level
     {
-        get { return _level; }
+        get => _level;
         set
         {
-            if (!_level.Equals(value))
-            {
-                var old = _level;
-                _level = value;
-                Console.WriteLine($"{old} -> {value}");
-                changed = true;
-            }
+            if (_level.Equals(value)) return;
+            var old = _level;
+            _level = value;
+            Console.WriteLine($"{old} -> {value}");
+            _changed = true;
         }
     }
 
     private static Actor.Job _job = 0;
     public static Actor.Job Job
     {
-        get { return _job; }
+        get => _job;
         set
         {
-            if (!_job.Equals(value))
-            {
-                var old = _job;
-                _job = value;
-                Console.WriteLine($"{old} -> {value}");
-                changed = true;
-            }
+            if (_job.Equals(value)) return;
+            var old = _job;
+            _job = value;
+            Console.WriteLine($"{old} -> {value}");
+            _changed = true;
         }
     }
 
     private static string _location = string.Empty;
     public static string Location
     {
-        get { return _location; }
+        get => _location;
         set
         {
-            if (_location != value && value != "???")
-            {
-                var old = _location;
-                _location = value;
-                Console.WriteLine($"{old} -> {value}");
-                changed = true;
-
-            }
+            if (_location == value || value == "???") return;
+            var old = _location;
+            _location = value;
+            Console.WriteLine($"{old} -> {value}");
+            _changed = true;
         }
     }
 
     private static Actor.Icon _status = 0;
     public static Actor.Icon Status
     {
-        get { return _status; }
+        get => _status;
         set
         {
             if (!_status.Equals(value))
@@ -77,7 +70,7 @@ public static class Program
                 var old = _status;
                 _status = value;
                 Console.WriteLine($"{old} -> {value}");
-                changed = true;
+                _changed = true;
             }
         }
     }
@@ -86,15 +79,13 @@ public static class Program
         foreach (var process in Process.GetProcesses())
         {
             //check for any FFXIV processes and make sure that they're actually running the game and not something like ffxiv_mediaplayer
-            if (process.MainWindowTitle == "FINAL FANTASY XIV")
+            if (process.MainWindowTitle != "FINAL FANTASY XIV") continue;
+            switch (process.ProcessName)
             {
-                if (process.ProcessName == "ffxiv")
-                {
+                case "ffxiv":
                     Console.WriteLine("DirectX 9 mode not supported.");
                     return;
-                }
-                if (process.ProcessName == "ffxiv_dx11")
-                {
+                case "ffxiv_dx11":
                     //check version
                     var gamedir = Path.GetDirectoryName(process.MainModule.FileName);
                     var verfile = Path.Combine(gamedir, "ffxivgame.ver");
@@ -115,15 +106,13 @@ public static class Program
                     {
                         Process = process,
                     });
-                }
-                else
-                {
+                    break;
+                default:
                     Console.WriteLine($"?_?\n{Path.GetDirectoryName(process.MainModule.FileName)}");
                     return;
-                }
-
-                break;
             }
+
+            break;
         }
 
         if (!MemoryHandler.Instance.IsAttached)
@@ -137,7 +126,7 @@ public static class Program
             MemoryHandler.Instance.UnsetProcess();
         };
 
-        string character = Reader.GetPlayerInfo().PlayerEntity.Name;
+        var character = Reader.GetPlayerInfo().PlayerEntity.Name;
         if (character == string.Empty)
         {
             Console.WriteLine("Are you logged in?");
@@ -147,34 +136,33 @@ public static class Program
         var handlers = new DiscordRpc.EventHandlers();
         DiscordRpc.Initialize(APPID, ref handlers, true, null);
         var presence = new DiscordRpc.RichPresence();
-        bool found = false;
 
         while (MemoryHandler.Instance.IsAttached)
         {
+            var characterFound = false;
+            
             foreach (var pc in Reader.GetActors().PCEntities.Values)
             {
-                if (pc.Name == character)
-                {
-                    Job = pc.Job;
-                    Level = pc.Level;
-                    //This becomes ??? if you're loading something
-                    Location = pc.Location;
-                    //None and Online are the same thing pretty much
-                    Status = pc.OnlineStatus == Actor.Icon.None ? Actor.Icon.Online : pc.OnlineStatus;
-                    found = true;
-                    break;
-                }
+                if (pc.Name != character) continue;
+                Job = pc.Job;
+                Level = pc.Level;
+                //This becomes ??? if you're loading something
+                Location = pc.Location;
+                //None and Online are the same thing pretty much
+                Status = pc.OnlineStatus == Actor.Icon.None ? Actor.Icon.Online : pc.OnlineStatus;
+                characterFound = true;
+                break;
             }
 
-            if (!found)
+            if (!characterFound)
             {
                 Console.WriteLine("Your character is gone?");
                 break;
             }
 
-            if (changed)
+            if (_changed)
             {
-                string onlinestatus2 = Status.ToString();
+                var onlinestatus2 = Status.ToString();
                 if (onlinestatus2 != string.Empty)
                 {
                     presence.details = character;

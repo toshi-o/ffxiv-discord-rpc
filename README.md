@@ -1,6 +1,8 @@
 Discord Rich Presence for FINAL FANTASY XIV
 
-This is my first time posting something I made on the interwebs, hope I did it good.
+This is my first time posting something I made to the interwebs, hope I did it good. 
+
+Doesn't work on DirectX 9 mode because there aren't any memory signatures available and I have no idea how to get those
 
 [Download](https://github.com/Poliwrath/ffxiv-discord-rpc/releases/latest)
 
