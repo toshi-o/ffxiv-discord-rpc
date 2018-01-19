@@ -175,17 +175,15 @@ namespace FFXIV_discord_rpc
                     var onlinestatus2 = Status.ToString();
                     if (string.IsNullOrEmpty(onlinestatus2))
                     {
-                        presence.details = character;
-                        presence.largeImageKey = Status.ToString().ToLower();
-                        presence.largeImageText = Location;
-                        presence.smallImageKey = Job.ToString().ToLower();
-                        presence.smallImageText = $"{Job.ToString()} Lv{Level}";
-                    }
-                    else
-                    {
                         Msg("Something's wrong? onlinestatus2 is nothing.", waitforinput: true);
-                        return;
+                        break;
                     }
+
+                    presence.details = character;
+                    presence.largeImageKey = Status.ToString().ToLower();
+                    presence.largeImageText = Location;
+                    presence.smallImageKey = Job.ToString().ToLower();
+                    presence.smallImageText = $"{Job.ToString()} Lv{Level}";
 
                     DiscordRpc.UpdatePresence(ref presence);
                 }
