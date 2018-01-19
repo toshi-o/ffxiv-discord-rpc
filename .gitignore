@@ -261,6 +261,6 @@ __pycache__/
 *.pyc
 
 # image stuff
-statusicons/magick
-statusicons/magick/*
-statusicons/optipng.exe
+icons/magick
+icons/magick/*
+icons/optipng.exe
