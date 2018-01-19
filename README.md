@@ -1,6 +1,7 @@
 Discord Rich Presence for FINAL FANTASY XIV
 
-![screenshot](https://i.imgur.com/oc5m3N5.png)
+![screenshot1](https://i.imgur.com/O3ykoPj.png)
+![screenshot2](https://i.imgur.com/oc5m3N5.png)
 
 This is my first time posting something I made to the interwebs, hope I did it good. 
 
