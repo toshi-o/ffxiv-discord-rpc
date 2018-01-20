@@ -149,7 +149,7 @@ namespace FFXIV_discord_rpc
                                 if (!characterFound)
                                 {
                                     TrayContext.UpdateStatus("Unable to find character?");
-                                    Thread.Sleep(10000);
+                                    Thread.Sleep(1000);
                                     continue;
                                 }
                                 
