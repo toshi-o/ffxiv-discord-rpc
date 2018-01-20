@@ -146,11 +146,8 @@ namespace FFXIV_discord_rpc
 
                                 if (!characterFound)
                                 {
-                                    if (MemoryHandler.Instance.IsAttached)
-                                    {
-                                        Exit("Your character is gone? (report this on github if this happens while playing/zoning)");
-                                        break;
-                                    }
+                                    TrayContext.UpdateStatus("Unable to find character?");
+                                    Thread.Sleep(10000);
                                     continue;
                                 }
 
