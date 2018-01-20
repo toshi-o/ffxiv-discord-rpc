@@ -2,7 +2,8 @@ Discord Rich Presence for FINAL FANTASY XIV
 
 ![screenshot1](https://i.imgur.com/O3ykoPj.png)
 ![screenshot2](https://i.imgur.com/rg9KWGO.png)
-![screenshot3](https://i.imgur.com/Jd8CfvP.png)
+![screenshot3](https://i.imgur.com/WlULdui.png)
+![screenshot4](https://i.imgur.com/7Z3J8as.png)
 
 This is my first time posting something I made to the interwebs, hope I did it good. 
 
@@ -40,3 +41,5 @@ TODO:
 better / higher quality icons
 
 more testing
+
+read/write configuration files
