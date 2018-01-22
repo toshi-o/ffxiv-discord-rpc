@@ -1,2 +1,13 @@
 language: csharp
 solution: FFXIV-discord-rpc.sln
+before_deploy:
+- cd /home/travis/build/Poliwrath/ffxiv-discord-rpc/bin/
+- zip ffxiv-discord-rpc-${TRAVIS_TAG}.zip FFXIV-discord-rpc.exe Newtonsoft.Json.dll
+deploy:
+  provider: releases
+  api_key:
+    secure: "grLfZ41Z3O8wj3yVWTNOJ7GTll4lb5u2AIxGp6rGx7hx3zXwEIbqD80t5rJwTKFsgxXtdFY14ymS+XTjetZABL2DJoccydpuPjS7FtQl+CTG3L6HhXu3f4sN7GgZdFL2KeRxvkBEKdJ2vNJpKv7VhLFSrNrDmhH5PaSmkyjtAIrErsmivU+OWkkKASFqJRMqbQDRcU9biu0mmfBGPzcA51GnZ7wU36+AtSrRArd2V+KazGboozymdLiESFgPylmCghc/ObeVmNc7ejJVdE+23z1VUjKh2bc9i2UAWuEjGx/Ot2pt6CtzFhGJd/TY0SVWnuEKIg1rBzUjPm+MDe+MLJ23kHHNbrBqS274N9rquTntn7nUOtTMV9B3agQArt+1WF+XKvxmIfY8G0pdecHU586Ny8bY0lpSNwEhsiMPG+J4206z5xT6cKFaVMLhkm8tZhIsedc5B27paRbiPMbLV14iZmn/UEm/LhRdl7YnrD0xsO9pvk4m5iYlVECpTEixeYmVkZ0fnnwA8yquHvQTX7B4kzKo6ON85igB2+VRP8gs5YtblbZp15+79stv2Q0qlkBT+hj/RNYD/v9CZUcm/6xGtEqqN6OA/8aJF+EPgf24ZnebAxQauupQuNMziZaJ7JsLY9peXQhJ27nDN0gKdSExB4vc5OZTxYXwTemnuWo="
+  file: "/home/travis/build/Poliwrath/ffxiv-discord-rpc/bin/ffxiv-discord-rpc-${TRAVIS_TAG}.zip"
+  skip_cleanup: true
+  on:
+    tags: true

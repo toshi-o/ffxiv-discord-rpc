@@ -132,7 +132,7 @@ namespace FFXIV_discord_rpc
                             });
 
                             READNAME:
-                            Player.Name = string.IsNullOrEmpty(Player.Name) ? Reader.GetPlayerInfo().PlayerEntity.Name : Player.Name;
+                            Player.Name = Reader.GetPlayerInfo().PlayerEntity.Name;
                             if (string.IsNullOrEmpty(Player.Name))
                             {
                                 TrayContext.UpdateStatus(STATUS.CANTREADCHARACTER);
@@ -164,8 +164,8 @@ namespace FFXIV_discord_rpc
                                 if (!characterFound)
                                 {
                                     TrayContext.UpdateStatus(STATUS.CANTFINDCHARACTER);
-                                    //this is also a very scary line
-                                    goto SLEEP;
+                                    Thread.Sleep(5000);
+                                    continue;
                                 }
                                 
                                 TrayContext.UpdateStatus(STATUS.RUNNING);
@@ -282,7 +282,7 @@ namespace FFXIV_discord_rpc
                     var prompt = new Form
                     {
                         Width = 100,
-                        Height = 50,
+                        Height = 100,
                         FormBorderStyle = FormBorderStyle.FixedToolWindow,
                         StartPosition = FormStartPosition.CenterScreen
                     };
