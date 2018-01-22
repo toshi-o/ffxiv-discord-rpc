@@ -17,11 +17,20 @@ namespace FFXIV_discord_rpc
 {
     public static class Program
     {
-        
+        public enum STATUS
+        {
+            NOTFOUND,
+            READING,
+            CANTREADCHARACTER,
+            CANTFINDCHARACTER,
+            RUNNING
+        }
         //App registered to my Discord account. "FINAL FANTASY XIV"
         private const string APPID = "401183593273098252";
         //the signatures have been working for a really long time but this is just to be safe
         private const string REQUIRED_VERSION = "2017.12.06.0000.0000";
+        //version
+        private const string VERSION = "1.2";
 
         public static RegistryKey AutostartKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         public static Icon icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
@@ -51,6 +60,10 @@ namespace FFXIV_discord_rpc
 
             Presence.details = Player.Name;
 
+            var location = Player.Location == "Mordion Gaol" ? "https://support.na.square-enix.com/" : Player.Location;
+
+            Presence.state = TrayContext.LocationUnderNameItem.Checked ? location : string.Empty;
+
             if (TrayContext.FfxivIconItem.Checked)
             {
                 Presence.largeImageKey = "ffxiv";
@@ -61,7 +74,7 @@ namespace FFXIV_discord_rpc
             else
             {
                 Presence.largeImageKey = onlinestatus.ToLower();
-                Presence.largeImageText = Player.Location == "Mordion Gaol" ? "https://support.na.square-enix.com/" : Player.Location;
+                Presence.largeImageText = location;
                 Presence.smallImageKey = Player.Job.ToString().ToLower();
                 Presence.smallImageText = $"{Player.Job.ToString()} Lv{Player.Level}";
             }
@@ -78,6 +91,8 @@ namespace FFXIV_discord_rpc
             while (true)
             {
                 if (MemoryHandler.Instance.IsAttached) continue;
+
+                TrayContext.UpdateStatus(STATUS.NOTFOUND);
 
                 //check for any FFXIV processes and make sure that they're actually running the game and not something like ffxiv_mediaplayer
                 foreach (var process in Process.GetProcesses())
@@ -107,26 +122,26 @@ namespace FFXIV_discord_rpc
                             var version = File.ReadAllText(verfile);
                             if (version != REQUIRED_VERSION)
                             {
-                                TrayContext.UpdateStatus($"Version mismatch: only works with {REQUIRED_VERSION} and your client is {version}");
-                                MemoryHandler.Instance.UnsetProcess();
+                                Exit($"Version mismatch: only works with {REQUIRED_VERSION} and your client is {version}");
                                 continue;
                             }
 
-                            TrayContext.UpdateStatus("Reading memory");
                             MemoryHandler.Instance.SetProcess(new ProcessModel
                             {
                                 Process = process,
                             });
 
-                            Player.Name = Reader.GetPlayerInfo().PlayerEntity.Name;
+                            READNAME:
+                            Player.Name = string.IsNullOrEmpty(Player.Name) ? Reader.GetPlayerInfo().PlayerEntity.Name : Player.Name;
                             if (string.IsNullOrEmpty(Player.Name))
                             {
-                                TrayContext.UpdateStatus("Can't read character name");
-                                MemoryHandler.Instance.UnsetProcess();
-                                continue;
+                                TrayContext.UpdateStatus(STATUS.CANTREADCHARACTER);
+                                Thread.Sleep(1000);
+                                //this is a very scary line
+                                goto READNAME;
                             }
 
-                            TrayContext.characterItem.Text = "Character: " + Player.Name;
+                            TrayContext.UpdateCharacterName();
 
                             DiscordRpc.Initialize(APPID, ref handlers, false, null);
                             while (MemoryHandler.Instance.IsAttached)
@@ -148,12 +163,12 @@ namespace FFXIV_discord_rpc
 
                                 if (!characterFound)
                                 {
-                                    TrayContext.UpdateStatus("Unable to find character?");
-                                    Thread.Sleep(1000);
-                                    continue;
+                                    TrayContext.UpdateStatus(STATUS.CANTFINDCHARACTER);
+                                    //this is also a very scary line
+                                    goto SLEEP;
                                 }
                                 
-                                TrayContext.UpdateStatus("Running");
+                                TrayContext.UpdateStatus(STATUS.RUNNING);
 
                                 if (Player._changed)
                                 {
@@ -174,6 +189,7 @@ namespace FFXIV_discord_rpc
                     break;
                 }
 
+                SLEEP:
                 Thread.Sleep(5000);
             }
         }
@@ -182,11 +198,11 @@ namespace FFXIV_discord_rpc
         public class TrayContext : ApplicationContext
         {
             static readonly MenuItem seperatorItem = new MenuItem("-");
-            public static MenuItem statusItem = new MenuItem
+            private static MenuItem statusItem = new MenuItem
             {
                 Enabled = false
             };
-            public static MenuItem characterItem = new MenuItem("Character: Unknown")
+            private static MenuItem characterItem = new MenuItem("Character: Unknown")
             {
                 Enabled = false
             };
@@ -194,21 +210,52 @@ namespace FFXIV_discord_rpc
             {
                 Checked = false
             };
-            public static MenuItem AutostartItem = new MenuItem("Automatically start with Windows")
+            public static MenuItem LocationUnderNameItem = new MenuItem("Show location under character name")
+            {
+                Checked = false
+            };
+            private static MenuItem AutostartItem = new MenuItem("Automatically start with Windows")
             {
                 Checked = AutostartKey.GetValue("ffxiv-discord-rpc") != null
             };
+
+            private static MenuItem name = new MenuItem("ffxiv-discord-rpc v"+ VERSION);
+
             public static MenuItem ChangeNameItem = new MenuItem("Change name");
 
             private readonly NotifyIcon _trayIcon;
 
-            public static void UpdateStatus(string status)
+            public static void UpdateCharacterName()
             {
-                statusItem.Text = "Status: " + status;
+                characterItem.Text = "Character: "+ (string.IsNullOrEmpty(Player.Name) ? "Unknown" : Player.Name);
+            }
+
+            public static void UpdateStatus(STATUS status)
+            {
+                string fix = string.Empty;
+                switch (status)
+                {
+                    case STATUS.NOTFOUND:
+                        fix = "FFXIV not found";
+                        UpdateCharacterName();
+                        break;
+                    case STATUS.CANTREADCHARACTER:
+                        fix = "Can't read character name";
+                        UpdateCharacterName();
+                        break;
+                    case STATUS.CANTFINDCHARACTER:
+                        fix = "Character not found";
+                        break;
+                    case STATUS.RUNNING:
+                        fix = "Running";
+                        break;
+                }
+                statusItem.Text = "Status: " + fix;
             }
 
             public TrayContext()
             {
+                name.Click += (sender, args) => { Process.Start("https://github.com/Poliwrath/ffxiv-discord-rpc"); };
                 AutostartItem.Click += (sender, args) =>
                 {
                     if (AutostartItem.Checked)
@@ -220,7 +267,14 @@ namespace FFXIV_discord_rpc
                 {
                     //TODO saving and loading from file
                     FfxivIconItem.Checked = !FfxivIconItem.Checked;
-                    DiscordRpc.ClearPresence();
+                    //DiscordRpc.ClearPresence();
+                    UpdatePresence();
+                };
+                LocationUnderNameItem.Click += (sender, args) =>
+                {
+                    //TODO saving and loading from file
+                    LocationUnderNameItem.Checked = !LocationUnderNameItem.Checked;
+                    //DiscordRpc.ClearPresence();
                     UpdatePresence();
                 };
                 ChangeNameItem.Click += (sender, args) =>
@@ -260,14 +314,12 @@ namespace FFXIV_discord_rpc
                 {
                     Icon = icon,
                     ContextMenu = new ContextMenu(new[] {
-                        new MenuItem("ffxiv-discord-rpc")
-                        {
-                            Enabled = false,
-                        },
+                        name,
                         statusItem,
                         characterItem,
                         seperatorItem,
                         FfxivIconItem,
+                        LocationUnderNameItem,
                         AutostartItem,
                         ChangeNameItem,
                         new MenuItem("Exit", delegate
