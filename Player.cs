@@ -10,6 +10,7 @@ namespace FFXIV_discord_rpc
     public static class Player
     {
         public static bool _changed;
+        public static bool _locationChanged;
         public static string Name;
 
         private static int _level;
@@ -21,7 +22,6 @@ namespace FFXIV_discord_rpc
                 if (_level == value) return;
                 var old = _level;
                 _level = value;
-                //Program.Msg($"Level: {old} -> {value}");
                 _changed = true;
             }
         }
@@ -35,7 +35,6 @@ namespace FFXIV_discord_rpc
                 if (_job == value) return;
                 var old = _job;
                 _job = value;
-                //Program.Msg($"Job: {old} -> {value}");
                 _changed = true;
             }
         }
@@ -49,8 +48,7 @@ namespace FFXIV_discord_rpc
                 if (_location == value || value == "???") return;
                 var old = _location;
                 _location = value;
-                //Program.Msg($"Location: {old} -> {value}");
-                _changed = true;
+                _locationChanged = true;
             }
         }
 
@@ -63,9 +61,13 @@ namespace FFXIV_discord_rpc
                 if (_status == value) return;
                 var old = _status;
                 _status = value;
-                //Program.Msg($"Status: {old} -> {value}");
                 _changed = true;
             }
+        }
+
+        public static string ToString()
+        {
+            return $"name: {Name} level: {Level} location: {Location} job: {Job} changed? {_changed} location changed? {_locationChanged}";
         }
     }
 }
