@@ -1,4 +1,6 @@
-Discord Rich Presence for FINAL FANTASY XIV
+#Discord Rich Presence for FINAL FANTASY XIV
+
+##May not work when 4.2 is released. Release might be around 12 hours after the patch is live
 
 ![screenshot1](https://i.imgur.com/O3ykoPj.png)
 ![screenshot2](https://i.imgur.com/rg9KWGO.png)
@@ -29,7 +31,7 @@ How to build:
 
 2. Open the solution in Visual Studio 2017
 
-3. Build
+3. Build (the "asdf" configuration uses hardcoded/random values for testing rather than reading memory, so only use this if you're on a computer that can't play the game or if it's down for maintenance!)
 
 4. Download the latest discord-rpc from [here](https://ci.appveyor.com/project/crmarsh/discord-rpc/build/artifacts) (builds\install\win64-dynamic.zip)
 
@@ -41,4 +43,4 @@ better / higher quality icons
 
 more testing
 
-read/write configuration files
+read / write configuration files
