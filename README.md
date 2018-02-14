@@ -1,6 +1,4 @@
-# Discord Rich Presence for FINAL FANTASY XIV
-
-## May not work when 4.2 is released. Release might be around 12 hours after the patch is live, if everything goes well in testing.
+#does not work anymore, feel free to fork it or whatever since i give up on this
 
 ![screenshot1](https://i.imgur.com/O3ykoPj.png)
 ![screenshot2](https://i.imgur.com/rg9KWGO.png)
